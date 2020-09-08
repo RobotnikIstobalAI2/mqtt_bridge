@@ -24,6 +24,12 @@ $ sudo apt-get install mosquitto mosquitto-clients
 $ pip install -r requirements.txt
 ```
 
+### Uninstall bson, install pymongo
+```bash
+$ sudo pip uninstall bson
+$ python -m pip install pymongo-
+```
+
 ### launch node
 
 ``` bash
@@ -62,6 +68,16 @@ You can also see MQTT messages using `mosquitto_sub`
 
 ```
 $ mosquitto_sub -t '#'
+```
+
+Or check with mosquitto_pub:
+--Strings:
+```
+$ mosquitto_pub -t echo -m '{"data": "lalala"}'
+```
+--Bools:
+```
+$ mosquitto_pub -t ping -m '{"data": true}'
 ```
 
 ## Usage
