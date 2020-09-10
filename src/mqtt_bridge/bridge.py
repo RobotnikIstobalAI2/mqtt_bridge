@@ -108,8 +108,8 @@ class MqttToRosBridge(Bridge):
         :param userdata: user defined data
         :param mqtt.MQTTMessage mqtt_msg: MQTT message
         """
-        rospy.loginfo("MQTT received from {}".format(mqtt_msg.topic))
-        rospy.loginfo("MQTT msg received {}".format(mqtt_msg.payload))
+        rospy.logdebug("MQTT received from {}".format(mqtt_msg.topic))
+        rospy.logdebug("MQTT msg received {}".format(mqtt_msg.payload))
         now = rospy.get_time() 
 
         if self._interval is None or now - self._last_published >= self._interval:
