@@ -30,6 +30,14 @@ $ sudo pip uninstall bson
 $ python -m pip install pymongo-
 ```
 
+### If you want to work with JSON change in config file
+
+$- serializer: msgpack:dumps
+$- deserializer: msgpack:loads
+$+ serializer: json:dumps
+$+ deserializer: json:loads
+
+
 ### launch node
 
 ``` bash
