@@ -103,9 +103,14 @@ class DynamicBridgeServer(Bridge):
 
         if msg_dict['op'] == 'register':
             rospy.loginfo("register service proxy")
-            self._bridges.add(RemoteService(
-                **msg_dict['args'])
-            )
+            try:
+                self._bridges.add(RemoteService(
+                    **msg_dict['args'])
+                )
+            except rospy.ServiceException as e:
+                rospy.logerr("Captured exception when trying to register a "
+                "service twice. This happens when mqtt clients are restarted:"
+                 " %s" % (e,))
 
     def _callback_mqtt_topic(self, client, userdata, mqtt_msg):
         u""" callback from MQTT
