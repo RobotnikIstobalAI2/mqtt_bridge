@@ -343,7 +343,13 @@ class RemoteService(Bridge):
 
         self._srv_type_name = srv_type
         self._srv_type = lookup_object(self._srv_type_name)
-        self._serviceproxy = rospy.Service(self._local_server, self._srv_type, self._ros_handler)
+
+        try:
+            self._serviceproxy = rospy.Service(self._local_server, self._srv_type, self._ros_handler)
+        except rospy.ServiceException as e:
+            rospy.logerr("Captured exception when trying to register a "
+            "service twice. This happens when mqtt clients lose connection:"
+                " %s" % (e,))
 
     def _ros_handler(self, req):
 
