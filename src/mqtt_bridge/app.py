@@ -9,6 +9,7 @@ from .bridge import create_bridge
 from .mqtt_client import create_private_path_extractor
 from .util import lookup_object
 
+counter = 0
 
 def create_config(mqtt_client, serializer, deserializer, mqtt_private_path):
     if isinstance(serializer, basestring):
@@ -23,6 +24,44 @@ def create_config(mqtt_client, serializer, deserializer, mqtt_private_path):
         binder.bind('mqtt_private_path_extractor', private_path_extractor)
     return config
 
+# Method to read the param file again to configure
+# the mqtt client without stopping the node.
+# Can't use mqtt_bridge_node again because dependency injection
+# doesn't work.
+def reconnect():
+    
+    params = rospy.get_param("~", {})
+    mqtt_params = params.pop("mqtt", {})
+    conn_params = mqtt_params.pop("connection")
+    mqtt_private_path = mqtt_params.pop("private_path", "")
+    bridge_params = params.get("bridge", [])
+
+    # create mqtt client
+    mqtt_client_factory_name = rospy.get_param(
+        "~mqtt_client_factory", ".mqtt_client:default_mqtt_client_factory")
+
+    mqtt_client_factory = lookup_object(mqtt_client_factory_name)
+    mqtt_client = mqtt_client_factory(mqtt_params)
+
+    # load serializer and deserializer
+    serializer = params.get('serializer', 'json:dumps')
+    deserializer = params.get('deserializer', 'json:loads')
+
+    # configure and connect to MQTT broker
+    mqtt_client.on_connect = _on_connect
+    mqtt_client.on_disconnect = _on_disconnect
+    mqtt_client.connect(**conn_params)
+
+    # configure bridges
+    bridges = []
+    for bridge_args in bridge_params:
+        bridges.append(create_bridge(**bridge_args))
+
+    global counter
+    counter = 0
+
+    # start MQTT loop
+    mqtt_client.loop_start()
 
 def mqtt_bridge_node():
     # init node
@@ -70,6 +109,12 @@ def mqtt_bridge_node():
 
 
 def _on_connect(client, userdata, flags, response_code):
+    global counter
+    counter = counter + 1
+
+    if (counter > 1):
+       reconnect()
+
     rospy.loginfo('MQTT connected')
 
 
