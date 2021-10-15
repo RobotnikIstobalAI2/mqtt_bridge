@@ -2,6 +2,16 @@
 Changelog for package mqtt_bridge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+1.2.4 (2021-10-15)
+------------------
+* Fixed Reconnect method when client loses connection
+
+
+1.2.3 (2021-08-12)
+------------------
+* Fixed the exception that not allow to restart services
+
+
 0.2.1 (2021-01-29)
 ------------------
 * changed version number
