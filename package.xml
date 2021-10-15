@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>mqtt_bridge</name>
-  <version>1.2.2</version>
+  <version>1.2.4</version>
   <description>The mqtt_bridge package</description>
 
   <author email="junya.hayashi@groove-x.com">Junya Hayashi</author>
   <author email="marc@hanheide.net">Marc Hanheide</author>
   <maintainer email="marc@hanheide.net">Marc Hanheide</maintainer>
+  <maintainer email="ggari@robotnik.es">Guillem Gari</maintainer>
+  <maintainer email="avillena@robotnik.es">Alvaro Villena</maintainer>
 
   <license>MIT</license>
 
