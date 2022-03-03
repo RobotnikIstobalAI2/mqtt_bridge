@@ -6,6 +6,7 @@ from abc import ABCMeta, abstractmethod
 import inject
 import paho.mqtt.client as mqtt
 import rospy
+import json
 
 from .util import lookup_object, extract_values, populate_instance
 from threading  import Condition
@@ -245,8 +246,7 @@ class MqttToRosBridge(Bridge):
         :param mqtt.Message mqtt_msg: MQTT Message
         :return rospy.Message: ROS Message
         """
-        msg_dict = self._deserialize(mqtt_msg.payload)
-        return populate_instance(msg_dict, self._msg_type())
+        return populate_instance(json.loads(mqtt_msg.payload), self._msg_type())
 
 class SubscribeBridge(MqttToRosBridge):
 
