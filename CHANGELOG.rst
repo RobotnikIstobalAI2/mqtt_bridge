@@ -5,6 +5,14 @@ Changelog for package mqtt_bridge
 Forthcoming
 -----------
 
+1.4.1-1 (2023-02-21 16:12)
+------------------------
+* Set QOS 1 for services
+
+1.4.1 (2021-11-29 16:12)
+------------------------
+* Added changelogs
+
 1.4.0 (2021-11-19 13:31)
 ------------------------
 * empty changelog
