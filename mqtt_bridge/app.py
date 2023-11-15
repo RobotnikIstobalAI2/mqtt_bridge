@@ -14,6 +14,7 @@ def create_config(mqtt_client, serializer, deserializer, mqtt_private_path):
     if isinstance(deserializer.value, str):
         deserializer = lookup_object(deserializer.value)
     private_path_extractor = create_private_path_extractor(mqtt_private_path)
+
     def config(binder):
         binder.bind('serializer', serializer)
         binder.bind('deserializer', deserializer)
@@ -23,31 +24,45 @@ def create_config(mqtt_client, serializer, deserializer, mqtt_private_path):
 
 
 def mqtt_bridge_node():
-    global mqtt_node 
-    mqtt_node = Node('mqtt_bridge_node',
-                allow_undeclared_parameters=True,
-                automatically_declare_parameters_from_overrides=True)
+    global mqtt_node
+    mqtt_node = Node(
+        'mqtt_bridge_node',
+        allow_undeclared_parameters=True,
+        automatically_declare_parameters_from_overrides=True
+    )
 
     # load bridge parameters
-    bridge_dict_keys = ["factory","msg_type","topic_from","topic_to"]
+    bridge_dict_keys = [
+        "factory",
+        "msg_type",
+        "topic_from",
+        "topic_to"
+    ]
     bridge_params = []
     total_bridges = mqtt_node.get_parameter("n_bridges").value
     for i in range(total_bridges):
         bridge_n = str((i % total_bridges) + 1)
-        bridge_param = mqtt_node.get_parameter('bridge.bridge'+bridge_n).value
-        bridge_params.append(dict(zip(bridge_dict_keys,bridge_param)))
+        bridge_param = mqtt_node.get_parameter('bridge.bridge' + bridge_n).value
+        bridge_params.append(
+            dict(
+                zip(
+                    bridge_dict_keys,
+                    bridge_param
+                )
+            )
+        )
 
-    mqtt_params ={
-                    "client" :  mqtt_node.get_parameters_by_prefix("mqtt.client"),
-                    "tls" : mqtt_node.get_parameters_by_prefix("mqtt.tls"),
-                    "account" : mqtt_node.get_parameters_by_prefix("mqtt.account"),
-                    "userdata" : mqtt_node.get_parameters_by_prefix("mqtt.userdata"),
-                    "message" : mqtt_node.get_parameters_by_prefix("mqtt.message"),
-                    "will"  : mqtt_node.get_parameters_by_prefix("mqtt.will")
-                }
+    mqtt_params = {
+        "client": mqtt_node.get_parameters_by_prefix("mqtt.client"),
+        "tls": mqtt_node.get_parameters_by_prefix("mqtt.tls"),
+        "account": mqtt_node.get_parameters_by_prefix("mqtt.account"),
+        "userdata": mqtt_node.get_parameters_by_prefix("mqtt.userdata"),
+        "message": mqtt_node.get_parameters_by_prefix("mqtt.message"),
+        "will": mqtt_node.get_parameters_by_prefix("mqtt.will")
+    }
     conn_params = mqtt_node.get_parameters_by_prefix("mqtt.connection")
     for key in conn_params.keys():
-        conn_params.update({key : conn_params[key].value})
+        conn_params.update({key: conn_params[key].value})
 
     mqtt_private_path = mqtt_node.get_parameter("mqtt.private_path").value
 
@@ -74,7 +89,12 @@ def mqtt_bridge_node():
     # configure bridges
     bridges = []
     for bridge_args in bridge_params:
-        bridges.append(create_bridge(**bridge_args,ros_node=mqtt_node))
+        bridges.append(
+            create_bridge(
+                **bridge_args,
+                ros_node=mqtt_node
+            )
+        )
 
     # start MQTT loop
     mqtt_client.loop_start()

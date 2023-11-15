@@ -52,8 +52,10 @@ def default_mqtt_client_factory(params: Dict) -> mqtt.Client:
 
     return client
 
+
 def param_to_value(param_dict) -> Dict:
     return {k: v.value for k, v in param_dict.items()}
+
 
 def create_private_path_extractor(mqtt_private_path: str) -> Callable[[str], str]:
     def extractor(topic_path):

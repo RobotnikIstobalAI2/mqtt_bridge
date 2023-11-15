@@ -3,7 +3,8 @@ from typing import Any, Callable, Dict
 
 from rosbridge_library.internal import message_conversion
 
-def lookup_object(object_path: str, package: str='mqtt_bridge') -> Any:
+
+def lookup_object(object_path: str, package: str = 'mqtt_bridge') -> Any:
     """ lookup object from a some.module:object_name specification. """
     module_name, obj_name = object_path.split(":")
     module = import_module(module_name, package)
@@ -11,7 +12,7 @@ def lookup_object(object_path: str, package: str='mqtt_bridge') -> Any:
     return obj
 
 
-extract_values = message_conversion.extract_values  
-populate_instance = message_conversion.populate_instance 
+extract_values = message_conversion.extract_values
+populate_instance = message_conversion.populate_instance
 
 __all__ = ['lookup_object', 'extract_values', 'populate_instance']
