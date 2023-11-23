@@ -9,6 +9,33 @@ import rclpy
 from rclpy.node import Node
 from rclpy.duration import Duration
 
+from rclpy.qos import QoSProfile, QoSReliabilityPolicy, QoSHistoryPolicy, QoSDurabilityPolicy
+
+""" 
+https://docs.ros2.org/latest/api/rclpy/api/qos.html
+https://answers.ros.org/question/360676/qos-python-code-for-create_subscriber/
+https://answers.ros.org/question/305795/ros2-latching/
+https://github.com/ros2/ros2/issues/464
+
+latching_qos = QoSProfile(depth=1,
+            durability=QoSDurabilityPolicy.RMW_QOS_POLICY_DURABILITY_TRANSIENT_LOCAL)
+sub = self.create_subscription(String, 'foo', self.callback, qos_profile=latching_qos)
+
+
+qos_profile = QoSProfile(
+            reliability=QoSReliabilityPolicy.RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT,
+            history=QoSHistoryPolicy.RMW_QOS_POLICY_HISTORY_KEEP_LAST,
+            depth=1
+        )
+
+        sub = Subscriber(
+            self,
+            Image,
+            "rgb_img",
+            qos_profile=qos_profile
+        )
+
+"""
 
 def create_bridge(
     factory: Union[str, "Bridge"],
@@ -19,8 +46,8 @@ def create_bridge(
     **kwargs
 ) -> "Bridge":
     """ generate bridge instance using factory callable and arguments.
-     if `factory` or `msg_type` is provided as string,
-     this function will convert it to a corresponding object.
+        if `factory` or `msg_type` is provided as string,
+        this function will convert it to a corresponding object.
     """
     if isinstance(factory, str):
         factory = lookup_object(factory)
